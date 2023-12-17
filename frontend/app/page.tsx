@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react';
-import Graph from './Graph';
+import Graph from './d3fc';
 
 export default function Home() {
   const [query, setQuery] = useState('');
@@ -44,8 +44,8 @@ export default function Home() {
 
   return (
     
-    <main style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-      <div style={{ marginBottom: '20px', marginTop: 10 }}>
+    <main style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', margin: 10 }}>
+      <div style={{ marginBottom: '10px', marginTop: 10 }}>
         <input
           style={{ border: '2px solid black', borderRadius: '15px', padding: '5px', textAlign: 'center' }}
           onChange={(e) => setQuery(e.target.value)}
@@ -54,29 +54,31 @@ export default function Home() {
             onKeyDown={handleSearchKeyDown}
           />
       </div>
-      <div className='flex min-h-screen flex-row items-start p-12'>
-        <div style={{ width: '100%', height: '100%' }}>
+      <div className='flex flex-row center items-start p-0'>
+        <div style={{ width: 1800 }}>
           {graphData && <Graph data={graphData} />}
         </div>
-        <div className='w-1/3'> {/* Previews container */}
-        {urls.map((urlPair, index) => (
-          <div key={index} className="video-container">
-            <iframe
-              title={`Embedded Video ${index}`}
-              src={`https://www.youtube.com/embed/${new URL(urlPair[0]).searchParams.get('v')}`}
-              className="video-iframe"
-            />
-            <audio
-              title={`Audio Preview ${index}`}
-              src={urlPair[1]}
-              controls
-              className="audio-preview"
-            />
-          </div>
-        ))}
+        <div className='w-1/3' style={{ height: "100%", display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '3px' }}> {/* Grid container for videos and audios */}
+          {urls.map((urlPair, index) => (
+            <div key={index} style={{ marginBottom: '0px' }}> {/* Container for each video and audio pair */}
+              <div className="video-container" style={{ overflow: 'hidden', position: 'relative', paddingBottom: '50.25%', height: 0 }}>
+                <iframe
+                  title={`Embedded Video ${index}`}
+                  src={`https://www.youtube.com/embed/${new URL(urlPair[0]).searchParams.get('v')}`}
+                  className="video-iframe"
+                  style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}
+                />
+              </div>
+              <audio
+                title={`Audio Preview ${index}`}
+                src={urlPair[1]}
+                controls
+                style={{ width: '100%' }} // Ensure the audio player spans the full width of the grid column
+              />
+            </div>
+          ))}
         </div>
       </div>
-      
     </main>
   );
 }

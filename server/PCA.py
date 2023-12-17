@@ -32,23 +32,28 @@ pca = PCA(n_components=2)
 pca_result = pca.fit_transform(array)  # Replace `array` with `scaled_array` if necessary
 
 # Create a DataFrame with PCA results
-pca_df = pd.DataFrame(data=pca_result, columns=['PC1', 'PC2'])
-pca_df = pca_df.multiply(800)
+pca_df = pd.DataFrame(data=pca_result, columns=['x', 'y'])
+#pca_df = pca_df.multiply(50)
 
 
 # Add identifiers to your DataFrame
 
-pca_df['id'] = range(0, len(pca_df))  # Creates unique identifiers starting from 1
+#pca_df['id'] = range(0, len(pca_df))  # Creates unique identifiers starting from 1
+#pca_df['name'] = df['track_name_spotify']
 pca_df['name'] = df['track_name_spotify']
-print(df['track_name_spotify'].head())
-print(pca_df.head())
+pca_df['id'] = range(0, len(pca_df))
+
+pca_df = pca_df[['x', 'y', 'class', 'quantity', 'date']]
+
+# Write to CSV
+pca_df.to_csv('graph_data.csv', index=False)
+
+print("CSV file created: graph_data_coords.csv")
 
 
 # Create nodes list
-nodes = pca_df.apply(lambda row: {"id": row['id'], "x": row['PC1'], "y": row['PC2']}, axis=1).tolist()
-
-# Optionally, create links list. Here, we'll create dummy links for illustration purposes:
-# If you have actual relationships, you should use those instead
+nodes = pca_df.apply(lambda row: {#/"song": row['name'],
+                                    "x": row['x'], "y": row['y']}, axis=1).tolist()
 
 
 # Convert nodes and links into a dictionary
@@ -59,6 +64,8 @@ graph_data = {
 # Export the dictionary to a JSON file
 with open('graph_data.json', 'w') as outfile:
     json.dump(graph_data, outfile)
+
+
   
 
 

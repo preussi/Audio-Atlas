@@ -1,19 +1,31 @@
-// useFetchHtmlAndUrls.js
-import { useState, useEffect } from 'react';
+// Example URL of the API endpoint
+const DATA_API_URL = 'http://ee-tik-vm054.ethz.ch:8000/graph-data';
 
-const useFetchHtmlAndUrls = () => {
-  const [urls, setUrls] = useState([]);
-  const [htmlContent, setHtmlContent] = useState('');
+// Function to fetch data based on the domain
+async function fetchData(domain) {
+  const { x, y } = domain;
 
-  useEffect(() => {
-    // Fetch HTML file content when the hook is used
-    fetch('') // Replace with the actual path to your HTML file
-      .then((response) => response.text())
-      .then((data) => setHtmlContent(data))
-      .catch((error) => console.error('Error fetching HTML content:', error));
-  }, []); // The empty array means this effect will only run once, similar to componentDidMount
+  // Construct the URL with query parameters for the domain
+  const url = new URL(DATA_API_URL);
+  url.searchParams.append('xmin', x[0]);
+  url.searchParams.append('xmax', x[1]);
+  url.searchParams.append('ymin', y[0]);
+  url.searchParams.append('ymax', y[1]);
 
-  return { urls, setUrls, htmlContent, setHtmlContent };
-};
+  try {
+    // Fetch the data from the API
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
 
-export default useFetchHtmlAndUrls;
+    // Parse and return the data
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return []; // Return an empty array in case of error
+  }
+}
+
+export default fetchData;

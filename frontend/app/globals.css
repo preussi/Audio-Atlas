@@ -3,9 +3,28 @@
 @tailwind utilities;
 
 
+
 body {
   color: rgb(var(--foreground-rgb));
   background: white;
-  margin: 10;
-  padding: 20;
+  overflow: hidden;
+}
+
+.chart-container {
+  display: block;
+  width: 100%; /* or a specific width */
+  height: 1000px; /* or a specific height */
+  margin: auto;
+  border: 1px solid #ccc;
+  padding: 10;
+  /* Add any other styling as needed */
+}
+
+d3fc-group {
+  grid-template-columns: 1em auto 1fr 1em 0;
+  grid-template-rows: 0 auto 1fr 1em 0;
+}
+
+.tick text {
+  /*display: none;*/
 }
