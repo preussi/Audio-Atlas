@@ -56,8 +56,11 @@ export default function Home() {
           flexDirection: 'column',
         }}>
           <h2>Information</h2>
-          <p>Audio Atlas is an interactive website for visualizing audio and music datasets. We use Milvus DB for storing and retrieving audio embeddings, and visualize the data using DeepScatter to efficiently render 2D scatter plots. Audio Atlas was developed in the [DISCO research group](https://disco.ethz.ch/) at ETH Zurich and is [open-source](https://github.com/ETH-DISCO/audio-atlas).
-          </p>
+            <p>Audio Atlas is an interactive website for visualizing audio and music datasets. 
+             We use Milvus DB for storing and retrieving audio embeddings, and visualize the data using DeepScatter to efficiently 
+             render 2D scatter plots. Audio Atlas was developed in the <a href="https://disco.ethz.ch/" style={{ color: 'blue' }}>DISCO research group</a> 
+             at ETH Zurich and is <a href="https://github.com/ETH-DISCO/audio-atlas" style={{ color: 'blue' }}>open-source</a>.
+            </p>
           <button onClick={onClose} style={{ alignSelf: 'flex-end', marginTop: 'auto' }}>Close</button>
         </div>
       </div>
