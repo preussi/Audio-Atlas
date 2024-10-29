@@ -592,9 +592,9 @@ export default function Home() {
                 <option value="ESC50">ESC-50</option>
               </select>
               {/* Info Icon Button */}
-              {/*<button onClick={handleOpenModal} style={{color: 'white', cursor: 'pointer', scale: '1.2'}}>
+              {<button onClick={handleOpenModal} style={{color: 'white', cursor: 'pointer', scale: '1.2'}}>
                 <FontAwesomeIcon icon={faInfoCircle} />
-              </button> */}
+              </button> }
             </div>
           </div>
           {/* Search Results */}
