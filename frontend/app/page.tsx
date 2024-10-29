@@ -56,9 +56,7 @@ export default function Home() {
           flexDirection: 'column',
         }}>
           <h2>Information</h2>
-          <p>Audio Atlas is website for visualizing vecotral databases. It uses Milvus DB for storing and retrieving data embeddings.
-            For visualizing the data, it uses DeepScatter, a tool utilising WebGL for efficiently rendering a 2D dot scatter. We provide a couple of databases to explore. 
-            Users can search the databases by uploading an audio file or by typing a query.
+          <p>Audio Atlas is an interactive website for visualizing audio and music datasets. We use Milvus DB for storing and retrieving audio embeddings, and visualize the data using DeepScatter to efficiently render 2D scatter plots. Audio Atlas was developed in the [DISCO research group](https://disco.ethz.ch/) at ETH Zurich and is [open-source](https://github.com/ETH-DISCO/audio-atlas).
           </p>
           <button onClick={onClose} style={{ alignSelf: 'flex-end', marginTop: 'auto' }}>Close</button>
         </div>
