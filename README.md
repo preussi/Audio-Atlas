@@ -83,7 +83,7 @@ bash import_dataset.sh
 
 - Uzeyir Valizada ([uvalizada@ethz.ch](mailto:uvalizada@ethz.ch))
 - Luca Lanzendörfer ([lanzendoerfer@ethz.ch](mailto:lanzendoerfer@ethz.ch))
-- Florian Grötschla ([fgroetschla@ethz.ch](mailtp:fgroetschla@ethz.ch))
+- Florian Grötschla ([fgroetschla@ethz.ch](mailto:fgroetschla@ethz.ch))
 
 ## License
 
