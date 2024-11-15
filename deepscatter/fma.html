@@ -1,63 +1,60 @@
-<style>
+<!doctype html>
+<head>
+  <style>
+    .buttons-container {
+      background-color: black;
+      padding: 10px;
+      color: white; /* Ensures the text color is white for better contrast */
+      display: flex; /* Aligns items in a row */
+      gap: 10px; /* Adds space between items */
+      justify-content: left; /* Center-aligns the items */
+    }
+    /* Existing styles... */
+    dt {
+      float: left;
+      clear: left;
+      width: 90px;
+      font-weight: bold;
+      color: rgb(128, 19, 0);
+    }
+    dt::after {
+      content: ':';
+    }
+    dd {
+      margin: 0 0 0 80px;
+      padding: 0 0 0.5em 0;
+      width: 180px;
+    }
+    /* Additional styles for input and buttons for better visibility */
+    .buttons-container input, .buttons-container button {
+      color: black; /* Text color for inputs and buttons */
+      background-color: white; /* Background color for inputs and buttons */
+      border: 1px solid gray; /* Adds a border to make elements distinct */
+      padding: 5px 10px; /* Adds some padding inside inputs and buttons */
+    }
     .ttooltip {
-      z-index: 99; /* Keeps tooltip above other content */
-    }
-    body {
-      margin: 0;
-      padding: 0;/* Hide scrollbars and disable scrolling */
-      height: 100vh;
-      width: 100vw;
-      z-index: 2;
-    }
+    z-index: 99; /* Keeps tooltip above other content */
+  }
+  body {
+    margin: 0;
+    padding: 0;/* Hide scrollbars and disable scrolling */
+    height: 100vh;
+    width: 100vw;
+    z-index: 2;
+  }
   </style>
+</head>
   
-  <body>
-    <div id="deepscatter"></div>
-  </body>
-  <head>
-    <style>
-      .buttons-container {
-        background-color: black;
-        padding: 10px;
-        color: white; /* Ensures the text color is white for better contrast */
-        display: flex; /* Aligns items in a row */
-        gap: 10px; /* Adds space between items */
-        justify-content: left; /* Center-aligns the items */
-      }
-      /* Existing styles... */
-      dt {
-        float: left;
-        clear: left;
-        width: 90px;
-        font-weight: bold;
-        color: rgb(128, 19, 0);
-      }
-      dt::after {
-        content: ':';
-      }
-      dd {
-        margin: 0 0 0 80px;
-        padding: 0 0 0.5em 0;
-        width: 180px;
-      }
-      /* Additional styles for input and buttons for better visibility */
-      .buttons-container input, .buttons-container button {
-        color: black; /* Text color for inputs and buttons */
-        background-color: white; /* Background color for inputs and buttons */
-        border: 1px solid gray; /* Adds a border to make elements distinct */
-        padding: 5px 10px; /* Adds some padding inside inputs and buttons */
-      }
-    </style>
-  </head>
-  
+<body>
+  <div id="deepscatter"></div>
   <script type="module">
     import Scatterplot from './src/deepscatter';
     import { Bitmask, DataSelection } from './src/selection';
     import { select } from 'd3-selection';
     
   
-    const server = 'http://ee-tik-vm054.ethz.ch:8000';
-    const frontend = 'http://82.130.102.10:3000';
+    const server = 'http://audio-atlas.ethz.ch:8000';
+    const frontend = 'http://audio-atlas.ethz.ch';
     const DATASET_NAME = 'fma';
     const NAME_FIELD = 'track_title';
     
@@ -231,10 +228,6 @@
   
       window.addEventListener('message', function(event) {
         // Make sure to check the origin of the sender
-          if (event.origin !== frontend) {
-            console.log("Received message from unauthorized origin:", event.origin);
-            return;
-          }
           if (event.data && event.data.type === 'searchZoom') {
             const { x, y } = event.data;
             search_zoom(x, y);
@@ -242,4 +235,6 @@
         });
         
     } setupScatterPlot();
+
   </script>
+</body>

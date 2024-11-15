@@ -1,3 +1,4 @@
+<!doctype html>
 <style>
   .ttooltip {
     z-index: 99; /* Keeps tooltip above other content */
@@ -56,8 +57,8 @@
   import { select } from 'd3-selection';
   
 
-  const server = 'http://ee-tik-vm054.ethz.ch:8000';
-  const frontend = 'http://82.130.102.10:3000';
+  const server = 'http://audio-atlas.ethz.ch:8000';
+  const frontend = 'http://audio-atlas.ethz.ch';
   const DATASET_NAME = 'ESC50';
   const NAME_FIELD = 'filename';
   
@@ -264,10 +265,6 @@
 
     window.addEventListener('message', function(event) {
       // Make sure to check the origin of the sender
-        if (event.origin !== frontend) {
-          console.log("Received message from unauthorized origin:", event.origin);
-          return;
-        }
         if (event.data && event.data.type === 'searchZoom') {
           const { x, y } = event.data;
           search_zoom(x, y);
