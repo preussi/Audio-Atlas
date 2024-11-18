@@ -41,13 +41,11 @@ Audio Atlas is a web application designed to visualize audio data using text-aud
    ```bash
    cd frontend
    npm install
-   npm run build
    ```
 3. Install dependencies and build deepscatter:
    ```bash
    cd deepscatter
    npm install
-   npm run build
    ```
    
 4. Run the application using Docker Compose:
