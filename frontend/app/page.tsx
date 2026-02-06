@@ -37,7 +37,10 @@ export default function Home() {
   const plotRef = useRef<DeepscatterPlotHandle>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
 
-  const isMobile = typeof window !== 'undefined' && /Mobi/i.test(window.navigator.userAgent);
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    setIsMobile(/Mobi/i.test(window.navigator.userAgent));
+  }, []);
 
   const datasetConfig = DATASET_CONFIGS[selectedDataset];
 
@@ -131,7 +134,7 @@ export default function Home() {
   const handleSearchKeyDown = async (event: React.KeyboardEvent) => {
     if (event.key !== 'Enter') return;
     try {
-      const response = await fetch(`${API_URL}/search/${query}/${selectedDataset}`);
+      const response = await fetch(`${API_URL}/search/${encodeURIComponent(query)}/${selectedDataset}`);
       const data = filterUniqueById(await response.json());
       setTimeout(() => handleSearchResults(data), 3000);
     } catch (error) {

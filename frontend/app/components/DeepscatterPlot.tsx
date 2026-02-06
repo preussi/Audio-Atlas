@@ -42,6 +42,7 @@ const DeepscatterPlot = forwardRef<DeepscatterPlotHandle, DeepscatterPlotProps>(
       let destroyed = false;
       let plot: any = null;
       let bgClickHandler: ((event: MouseEvent) => void) | null = null;
+      let labelJustClicked = false;
 
       (async () => {
         const { Scatterplot } = await import('deepscatter');
@@ -82,9 +83,10 @@ const DeepscatterPlot = forwardRef<DeepscatterPlotHandle, DeepscatterPlotProps>(
 
         plot._zoom?.zoom_to(0.7, 0, 0);
 
-        // Click handler
+        // Click handler — datum.id is float in Arrow tiles, convert to int
         plot.click_function = (datum: any) => {
-          onNodeClickRef.current?.(datum.id);
+          const id = Math.round(Number(datum.id));
+          if (!isNaN(id)) onNodeClickRef.current?.(id);
         };
 
         // Tooltip
@@ -118,6 +120,7 @@ const DeepscatterPlot = forwardRef<DeepscatterPlotHandle, DeepscatterPlotProps>(
 
         plot.label_click = async (datum: any) => {
           if (destroyed) return;
+          labelJustClicked = true;
           const genre = datum.text;
           const colorDomain = config.encoding.color.domain;
           const colorRange = config.encoding.color.range;
@@ -138,9 +141,13 @@ const DeepscatterPlot = forwardRef<DeepscatterPlotHandle, DeepscatterPlotProps>(
           }
         };
 
-        // Click on background to clear highlights
+        // Click on background to clear highlights (skip if a label was just clicked)
         bgClickHandler = (event: MouseEvent) => {
           if (destroyed) return;
+          if (labelJustClicked) {
+            labelJustClicked = false;
+            return;
+          }
           const target = event.target as HTMLElement;
           if (!target.closest('.node') && !target.matches('#select')) {
             plot.plotAPI({ encoding: initialEncoding });
