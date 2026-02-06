@@ -1,23 +1,26 @@
-# syntax = docker/dockerfile:1.4
-
-FROM python:3.9.13-slim-bullseye
+FROM python:3.12-slim-bookworm
 
 WORKDIR /server
 
+# Install system dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends libsndfile1 curl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
 # Copy requirements first for dependency caching
-COPY ./requirements.txt . 
-
-# Update package list and install libsndfile
-RUN apt update && apt install -y libsndfile1
-
-# Upgrade pip to the latest version
-RUN pip install --upgrade pip
+COPY requirements.txt .
 
 # Install Python dependencies
-RUN pip install -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application files (if needed)
+# Copy application code
 COPY . .
 
-# Specify the command to run the application
-CMD ["python", "main.py"]
+# Create directory for uploaded files
+RUN mkdir -p uploaded_files
+
+EXPOSE 8000
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -1,6 +1,5 @@
 {
-  "dependencies": {
-    "d3": "^7.8.5",
-    "regl": "^2.1.0"
-  }
+  "name": "audio-atlas",
+  "private": true,
+  "workspaces": ["frontend", "deepscatter"]
 }

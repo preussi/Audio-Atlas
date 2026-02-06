@@ -3,6 +3,7 @@ server/.env
 server/.venv
 server/node_modules
 server/audio_files
+server/__pycache__
 
 frontend/node_modules
 frontend/.next
@@ -17,3 +18,6 @@ volumes
 embeds.py
 merger.py
 git
+node_modules
+.DS_Store
+__pycache__

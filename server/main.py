@@ -3,6 +3,7 @@ import shutil
 from typing import Union
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pymilvus import connections
 from pymilvus import Collection
@@ -31,12 +32,17 @@ json_file_path = './config/dataset_configs.json'
 with open(json_file_path, 'r') as file:
     dataset_configs = json.load(file)
 
-connections.connect(
-  alias="default",
-  host='standalone', #172.22.0.7
-  port='19530',
-  db_name="default"
-)
+try:
+    connections.connect(
+      alias="default",
+      host='standalone',
+      port='19530',
+      db_name="default"
+    )
+    _milvus_connected = True
+except Exception as e:
+    print(f"WARNING: Could not connect to Milvus: {e}")
+    _milvus_connected = False
 
 class DatasetManager:
     def __init__(self, name, model_checkpoint, output_fields):
@@ -116,11 +122,15 @@ class DatasetManager:
         audio_embed = self.model.get_audio_embedding_from_data(x = audio)
         return audio_embed
 
-datasets = {name: DatasetManager(name, **config) for name, config in dataset_configs.items()}
-
-# Example usage of the models
-# This is just a placeholder function to illustrate how you might use the loaded models
-# You'll need to adjust it according to your actual usage
+datasets = {}
+if _milvus_connected:
+    for name, config in dataset_configs.items():
+        try:
+            datasets[name] = DatasetManager(name, **config)
+        except Exception as e:
+            print(f"WARNING: Failed to load dataset '{name}': {e}")
+else:
+    print("WARNING: Skipping dataset loading (no Milvus connection). Search endpoints will be unavailable.")
 
 @app.get("/search/{query}/{dataset}")
 def search(dataset: str, query: str):
@@ -174,6 +184,11 @@ def get_labels(dataset: str):
         labels = json.load(file)
     # Return the JSON data as a response
     return labels
+
+# Serve deepscatter Arrow tile data
+tiles_dir = os.path.join(os.path.dirname(__file__), "data", "tiles")
+if os.path.isdir(tiles_dir):
+    app.mount("/data/tiles", StaticFiles(directory=tiles_dir), name="tiles")
 
 
 

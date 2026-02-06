@@ -1,36 +1,41 @@
-version: '3.5'
-
 services:
   frontend:
     container_name: frontend
-    build: 
-      context: ./frontend
-    ports: 
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    ports:
       - "3000:3000"
     volumes:
-      - ./frontend:/frontend
+      # Mount source for hot-reload in development
+      - ./frontend:/app/frontend
+      - ./deepscatter/dist:/app/deepscatter/dist
+      - ./deepscatter/package.json:/app/deepscatter/package.json
+      # Prevent container node_modules from being overwritten by mount
+      - /app/frontend/node_modules
+      - /app/node_modules
+    working_dir: /app/frontend
     command: npm run dev
-  deepscatter:
-    container_name: deepscatter
-    build: 
-      context: ./deepscatter
-    ports: 
-      - "3344:3344"
-    volumes:
-      - ./deepscatter:/deepscatter
-    command: npm run dev
+    depends_on:
+      - server
+
   server:
     container_name: server
-    build: 
+    build:
       context: ./server
-    command: uvicorn main:app --reload --host=0.0.0.0
-    ports: 
+    ports:
       - "8000:8000"
     volumes:
-      - ./server:/server      
+      - ./server:/server
+      - ./deepscatter/data:/server/data/tiles
+    command: uvicorn main:app --reload --host=0.0.0.0 --port=8000
+    depends_on:
+      standalone:
+        condition: service_healthy
+
   etcd:
     container_name: milvus-etcd
-    image: quay.io/coreos/etcd:v3.5.5
+    image: quay.io/coreos/etcd:v3.5.12
     environment:
       - ETCD_AUTO_COMPACTION_MODE=revision
       - ETCD_AUTO_COMPACTION_RETENTION=1000
@@ -47,7 +52,7 @@ services:
 
   minio:
     container_name: milvus-minio
-    image: minio/minio:RELEASE.2023-03-20T20-16-18Z
+    image: minio/minio:RELEASE.2024-09-22T00-33-43Z
     environment:
       MINIO_ACCESS_KEY: minioadmin
       MINIO_SECRET_KEY: minioadmin
@@ -65,10 +70,10 @@ services:
 
   standalone:
     container_name: milvus-standalone
-    image: milvusdb/milvus:v2.3.2
+    image: milvusdb/milvus:v2.6.8
     command: ["milvus", "run", "standalone"]
     security_opt:
-    - seccomp:unconfined
+      - seccomp:unconfined
     environment:
       ETCD_ENDPOINTS: etcd:2379
       MINIO_ADDRESS: minio:9000
@@ -84,9 +89,9 @@ services:
       - "19530:19530"
       - "9091:9091"
     depends_on:
-      - "etcd"
-      - "minio"
-      
+      - etcd
+      - minio
+
 networks:
   default:
     name: milvus
