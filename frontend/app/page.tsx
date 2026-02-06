@@ -9,7 +9,9 @@ import SongTile from './components/SongTile';
 import AudioPlayer from './components/AudioPlayer';
 import InfoModal from './components/InfoModal';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+// All API requests go through Next.js rewrites (see next.config.ts) so the
+// browser only needs to reach the frontend origin — no cross-origin issues.
+const API_URL = '';
 
 function filterUniqueById(jsonResponse: unknown): any[] {
   if (!Array.isArray(jsonResponse)) return [];

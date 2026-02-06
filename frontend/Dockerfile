@@ -15,9 +15,8 @@ COPY deepscatter/dist/ deepscatter/dist/
 # Remove prepare script so npm ci doesn't try to rebuild deepscatter from source
 RUN npm pkg --workspace=deepscatter delete scripts.prepare
 
-# Install dependencies (workspace-aware; uses install to tolerate lockfile drift
-# since deepscatter is cloned separately and may differ from the committed lockfile)
-RUN npm install
+# Install dependencies (workspace-aware)
+RUN npm ci
 
 # Copy frontend source
 COPY frontend/ frontend/
